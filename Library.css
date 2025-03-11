@@ -1,0 +1,17 @@
+.book-card {
+    background-color: beige;
+    padding: 0.3rem;
+    border-radius: 3%;
+    width: 30vh;
+    margin: 0.5rem;
+}
+
+.btn-add-book {
+    margin: 0.5rem;
+}
+
+.btn-add-book:hover {
+    background-color: rgba(0, 86, 179, 0.5);
+    /* Un bleu plus foncé mais toujours doux */
+    transform: scale(1.05);
+}
