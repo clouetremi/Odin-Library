@@ -1,3 +1,8 @@
+.library-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .book-card {
     background-color: beige;
     padding: 0.3rem;
@@ -14,4 +19,19 @@
     background-color: rgba(0, 86, 179, 0.5);
     /* Un bleu plus foncé mais toujours doux */
     transform: scale(1.05);
+}
+
+#book-form{
+    background-color: beige;
+    padding: 0.3rem;
+    border-radius: 3%;
+    width: 30vh;
+    margin: 0.5rem;
+}
+
+#book-form input[type="text"]{
+    width: 100%;
+    box-sizing: border-box; /* Evite que le padding et la bordure n'affectent la largeur */
+    padding: 0.5rem;
+    margin-bottom: 0.3rem;
 }
