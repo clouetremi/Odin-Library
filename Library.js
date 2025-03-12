@@ -31,7 +31,7 @@ function displayLibrary() {
     const libraryContainer = document.querySelector(".library-container");
     libraryContainer.innerHTML = "";
 
-    myLibrary.forEach((book, index) => {
+    myLibrary.forEach((book) => {
         const bookCard = document.createElement("div");
         bookCard.classList.add("book-card");
 
