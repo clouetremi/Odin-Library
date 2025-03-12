@@ -42,8 +42,8 @@ function displayLibrary() {
     <p><strong>Status : </strong>${book.read}</p>
     <p><strong>ID : </strong>${book.id}</p>
 <br>
-    <button class="btn-delete-book" type="button" data-index="${index}">Delete New book</button>
-     <button class="btn-change-read" type="button" data-index="${index}">Change read status</button>
+    <button class="btn-delete-book" type="button" data-id="${book.id}">Delete New book</button>
+     <button class="btn-change-read" type="button" data-id="${book.id}">Change read status</button>
     `;
         libraryContainer.appendChild(bookCard);
     });
@@ -53,11 +53,12 @@ function displayLibrary() {
     deleteButtons.forEach((button) => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
-            const index = button.getAttribute("data-index");
-            myLibrary.splice(index, 1);
-            displayLibrary();
-
-
+            const id = button.getAttribute("data-id");
+            const bookIndex = myLibrary.findIndex(book => book.id === id);
+            if (bookIndex !== -1) {
+                myLibrary.splice(bookIndex, 1);
+                displayLibrary();
+            }
         });
     });
 
@@ -65,9 +66,12 @@ function displayLibrary() {
     changeRead.forEach((button) => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
-            const index = button.getAttribute("data-index");
-            myLibrary[index].read = myLibrary[index].read === "Read" ? "Didn't read yet" : "Read";
-            displayLibrary();
+            const id = button.getAttribute("data-id");
+            const book = myLibrary.find(book => book.id === id);
+            if (book) {
+                book.toggleRead()
+                displayLibrary();
+            }
         });
     });
 };
@@ -137,3 +141,7 @@ function saveBook() {
     // Effacer le formulaire après l'ajout 
     document.querySelector(".display-book").innerHTML = "";
 }
+
+Book.prototype.toggleRead = function () {
+    this.read = this.read === "Read" ? "Didn't read yet" : "Read";
+};
