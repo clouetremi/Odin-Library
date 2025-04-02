@@ -1,32 +1,37 @@
-// On créer un Array pour stocker nos livres
+
+// On crée un Array pour stocker nos livres
 const myLibrary = [];
 
-// Fonction constructor qui prend 5 arguments qui va nous permettre de créer nos livres
-function Book(title, author, page, read, id) {
-    this.title = title;
-    this.author = author;
-    this.page = page;
-    this.read = read;
-    this.id = crypto.randomUUID();
-
-    this.info = function () {
-        return `The book ${this.title} by ${this.author} has ${this.page} pages and its status is ${this.read}`
+class Book {
+    constructor(title, author, page, read) {
+        this.title = title;
+        this.author = author;
+        this.page = page;
+        this.read = read;
+        this.id = crypto.randomUUID();
     }
-};
 
-// Fonction qui ajoute notre livre dans le tableau en 
-// créant une variable pour notre nouveau livre
-// Puis la pousse dans notre Array myLibrary
+    // Méthode pour afficher les infos du livre
+    info() {
+        return `The book ${this.title} by ${this.author} has ${this.page} pages and its status is ${this.read}`;
+    }
 
+    // Méthode pour changer le statut de lecture
+    toggleRead() {
+        this.read = this.read === "Read" ? "Didn't read yet" : "Read";
+    }
+}
+
+// Fonction pour ajouter un livre à la bibliothèque
 function addBookToLibrary(title, author, page, read) {
     const newBook = new Book(title, author, page, read);
-    myLibrary.push(newBook)
-};
+    myLibrary.push(newBook);
+}
 
-// Essaie de la fonction avec un livre et test avec console.log pour voir si ça charge bien
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, "not read yet");
+// Essaie de la fonction avec un livre
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, "Not read yet");
 
-// Fonction qui va faire apparaître chaque livre sur le DOM
+// Fonction pour afficher les livres dans le DOM
 function displayLibrary() {
     const libraryContainer = document.querySelector(".library-container");
     libraryContainer.innerHTML = "";
@@ -36,21 +41,20 @@ function displayLibrary() {
         bookCard.classList.add("book-card");
 
         bookCard.innerHTML = `
-    <h3><strong>Title : </strong>${book.title}</h3>
-    <p><strong>Author : </strong>${book.author}</p>
-    <p><strong>Page : </strong>${book.page}</p>
-    <p><strong>Status : </strong>${book.read}</p>
-    <p><strong>ID : </strong>${book.id}</p>
-<br>
-    <button class="btn-delete-book" type="button" data-id="${book.id}">Delete New book</button>
-     <button class="btn-change-read" type="button" data-id="${book.id}">Change read status</button>
-    `;
+            <h3><strong>Title :</strong> ${book.title}</h3>
+            <p><strong>Author :</strong> ${book.author}</p>
+            <p><strong>Pages :</strong> ${book.page}</p>
+            <p><strong>Status :</strong> ${book.read}</p>
+            <p><strong>ID :</strong> ${book.id}</p>
+            <br>
+            <button class="btn-delete-book" type="button" data-id="${book.id}">Delete Book</button>
+            <button class="btn-change-read" type="button" data-id="${book.id}">Change Read Status</button>
+        `;
         libraryContainer.appendChild(bookCard);
     });
 
-    // Ajoute un gestionnaire d'event pour tous les boutons de suppression
-    const deleteButtons = document.querySelectorAll(".btn-delete-book");
-    deleteButtons.forEach((button) => {
+    // Ajout des événements pour supprimer un livre
+    document.querySelectorAll(".btn-delete-book").forEach((button) => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
             const id = button.getAttribute("data-id");
@@ -62,73 +66,66 @@ function displayLibrary() {
         });
     });
 
-    const changeRead = document.querySelectorAll(".btn-change-read");
-    changeRead.forEach((button) => {
+    // Ajout des événements pour changer le statut de lecture
+    document.querySelectorAll(".btn-change-read").forEach((button) => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
             const id = button.getAttribute("data-id");
             const book = myLibrary.find(book => book.id === id);
             if (book) {
-                book.toggleRead()
+                book.toggleRead();
                 displayLibrary();
             }
         });
     });
-};
+}
 
 displayLibrary();
 
-// Fonction qui fait apparaître notre form qui nous permet de rentrer un livre
+// Fonction pour afficher le formulaire d'ajout de livre
 function addBook() {
-    const displayBook = document.querySelector(".display-book")
+    const displayBook = document.querySelector(".display-book");
     displayBook.innerHTML = `
-    <form id="book-form">
-<label for="title">Title :</label>
-<input type="text" id="title" name="title" required>
-<br><br>
-<label for="author">Author :</label>
-<input type="text" id="author" name="author" required>
-<br><br>
-<label for="page">Page :</label>
-<input type="text" id="page" name="page" required>
-<br><br>
-<label for="read">Status :</label>
-<div>
-<input type="radio" id="read-yes" name="read" value="Read" required>
-<label for="read-yes">Read</label>
-</div>
-<div>
-<input type="radio" id="read-no" name="read" value="Didn't read yet" required>
-<label for="read-no">Didn't read yet</label>
-</div>
-<br><br>
+        <form id="book-form">
+            <label for="title">Title :</label>
+            <input type="text" id="title" name="title" required><br><br>
 
-<button class="btn-save-book" type="submit">Add New book</button>
-</form>
-`;
+            <label for="author">Author :</label>
+            <input type="text" id="author" name="author" required><br><br>
 
-    const form = document.querySelector("#book-form");
-    form.addEventListener("submit", (event) => {
+            <label for="page">Pages :</label>
+            <input type="number" id="page" name="page" required><br><br>
+
+            <label for="read">Status :</label>
+            <div>
+                <input type="radio" id="read-yes" name="read" value="Read" required>
+                <label for="read-yes">Read</label>
+            </div>
+            <div>
+                <input type="radio" id="read-no" name="read" value="Didn't read yet" required>
+                <label for="read-no">Didn't read yet</label>
+            </div><br><br>
+
+            <button class="btn-save-book" type="submit">Add New Book</button>
+        </form>
+    `;
+
+    // Ajout d'un event listener au formulaire
+    document.querySelector("#book-form").addEventListener("submit", (event) => {
         event.preventDefault();
         saveBook();
     });
-};
+}
 
-// Fonction concernant notre bouton de base pour faire apparaître notre form 
-const btnAddBook = document.querySelector(".btn-add-book");
-btnAddBook.addEventListener("click", addBook);
-
-
-// Fonction permettant d'enregistrer les infos de notre form
+// Fonction pour sauvegarder le livre depuis le formulaire
 function saveBook() {
-
     const title = document.querySelector("#title").value;
     const author = document.querySelector("#author").value;
     const page = document.querySelector("#page").value;
     const read = document.querySelector('input[name="read"]:checked')?.value;
 
     if (!title || !author || !page || !read) {
-        alert("Veuillez remplir tous les champs");
+        alert("Veuillez remplir tous les champs.");
         return;
     }
 
@@ -138,10 +135,9 @@ function saveBook() {
     // Mettre à jour l'affichage des livres
     displayLibrary();
 
-    // Effacer le formulaire après l'ajout 
+    // Effacer le formulaire après l'ajout
     document.querySelector(".display-book").innerHTML = "";
 }
 
-Book.prototype.toggleRead = function () {
-    this.read = this.read === "Read" ? "Didn't read yet" : "Read";
-};
+// Gestion du bouton pour afficher le formulaire
+document.querySelector(".btn-add-book").addEventListener("click", addBook);
